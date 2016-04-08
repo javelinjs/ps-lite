@@ -5,6 +5,7 @@
 #define PS_INTERNAL_POSTOFFICE_H_
 #include <mutex>
 #include <algorithm>
+#include <unordered_map>
 #include <vector>
 #include "ps/range.h"
 #include "ps/internal/customer.h"
@@ -18,8 +19,8 @@ class Postoffice {
   /**
    * \brief return the singleton object
    */
-  static Postoffice* Get() {
-    static Postoffice e; return &e;
+  static Postoffice* Get(std::unordered_map<const char*, const char*>* envs = nullptr) {
+    static Postoffice e(envs); return &e;
   }
   /** \brief get the van */
   Van* van() { return van_; }
@@ -143,7 +144,7 @@ class Postoffice {
   void Manage(const Message& recv);
 
  private:
-  Postoffice();
+  explicit Postoffice(std::unordered_map<const char*, const char*>* envs = nullptr);
   ~Postoffice() { delete van_; }
   Van* van_;
   mutable std::mutex mu_;

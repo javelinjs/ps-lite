@@ -5,12 +5,14 @@
  */
 #ifndef PS_PS_H_
 #define PS_PS_H_
+#include <unordered_map>
 /** \brief basic setups in ps */
 #include "ps/base.h"
 /** \brief communicating with a pair of (int, string). */
 #include "ps/simple_app.h"
 /** \brief communcating with a list of key-value paris. */
 #include "ps/kv_app.h"
+
 namespace ps {
 /** \brief Returns the number of worker nodes */
 int NumWorkers() { return Postoffice::Get()->num_workers(); }
@@ -34,8 +36,9 @@ int MyRank() { return Postoffice::Get()->my_rank(); }
  * This function will block until every nodes are started.
  * \param argv0 the program name, used for logging
  */
-void Start(const char* argv0 = nullptr) {
-  Postoffice::Get()->Start(argv0);
+void Start(const char* argv0 = nullptr,
+           std::unordered_map<const char*, const char*>* envs = nullptr) {
+  Postoffice::Get(envs)->Start(argv0);
 }
 /**
  * \brief terminate the system
