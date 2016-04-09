@@ -14,21 +14,21 @@ Postoffice::Postoffice(std::unordered_map<const char*, const char*>* envs)
   : van_(new Van()) {
   const char* val = NULL;
   val = CHECK_NOTNULL(
-    envs->find("DMLC_NUM_WORKER") == envs->end()
+    (!envs || envs->find("DMLC_NUM_WORKER") == envs->end())
     ? getenv("DMLC_NUM_WORKER") : (*envs)["DMLC_NUM_WORKER"]);
   num_workers_ = atoi(val);
   val =  CHECK_NOTNULL(
-    envs->find("DMLC_NUM_SERVER") == envs->end()
+    (!envs || envs->find("DMLC_NUM_SERVER") == envs->end())
     ? getenv("DMLC_NUM_SERVER") : (*envs)["DMLC_NUM_SERVER"]);
   num_servers_ = atoi(val);
   val = CHECK_NOTNULL(
-    envs->find("DMLC_ROLE") == envs->end()
+    (!envs || envs->find("DMLC_ROLE") == envs->end())
     ? getenv("DMLC_ROLE") : (*envs)["DMLC_ROLE"]);
   std::string role(val);
   is_worker_ = role == "worker";
   is_server_ = role == "server";
   is_scheduler_ = role == "scheduler";
-  verbose_ = envs->find("PS_VERBOSE") == envs->end()
+  verbose_ = (!envs || envs->find("PS_VERBOSE") == envs->end())
     ? GetEnv("PS_VERBOSE", 0) : atoi((*envs)["PS_VERBOSE"]);
 }
 
