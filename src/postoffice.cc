@@ -7,15 +7,16 @@
 #include "ps/internal/postoffice.h"
 #include "ps/internal/message.h"
 #include "ps/base.h"
+#include "ps/env.h"
 
 namespace ps {
 Postoffice::Postoffice() : van_(new Van()) {
   const char* val = NULL;
-  val = CHECK_NOTNULL(getenv("DMLC_NUM_WORKER"));
+  val = CHECK_NOTNULL(Environment::Get()->find("DMLC_NUM_WORKER"));
   num_workers_ = atoi(val);
-  val =  CHECK_NOTNULL(getenv("DMLC_NUM_SERVER"));
+  val =  CHECK_NOTNULL(Environment::Get()->find("DMLC_NUM_SERVER"));
   num_servers_ = atoi(val);
-  val = CHECK_NOTNULL(getenv("DMLC_ROLE"));
+  val = CHECK_NOTNULL(Environment::Get()->find("DMLC_ROLE"));
   std::string role(val);
   is_worker_ = role == "worker";
   is_server_ = role == "server";
