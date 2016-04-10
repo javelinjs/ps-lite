@@ -9,6 +9,7 @@
 #include "ps/range.h"
 #include "ps/internal/customer.h"
 #include "ps/internal/van.h"
+#include "ps/env.h"
 namespace ps {
 /**
  * \brief the center of the system
@@ -157,6 +158,7 @@ class Postoffice {
   std::mutex barrier_mu_;
   std::condition_variable barrier_cond_;
   Callback exit_callback_;
+  std::shared_ptr<Environment> env_ref_;
   DISALLOW_COPY_AND_ASSIGN(Postoffice);
 };
 
