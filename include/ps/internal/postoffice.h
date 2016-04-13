@@ -145,7 +145,13 @@ class Postoffice {
 
  private:
   Postoffice();
-  ~Postoffice() { delete van_; }
+  ~Postoffice() { 
+    delete van_;
+    if (env_ref_ != nullptr) {
+      // release environment reference
+      env_ref_ = nullptr;
+    }
+  }
   Van* van_;
   mutable std::mutex mu_;
   std::unordered_map<int, Customer*> customers_;

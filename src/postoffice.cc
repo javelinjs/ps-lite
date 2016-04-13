@@ -9,8 +9,7 @@
 #include "ps/base.h"
 
 namespace ps {
-Postoffice::Postoffice() : van_(new Van()) {
-  env_ref_ = Environment::Get();
+Postoffice::Postoffice() : van_(new Van()), env_ref_(Environment::Get()) {
   const char* val = NULL;
   val = CHECK_NOTNULL(env_ref_->find("DMLC_NUM_WORKER"));
   num_workers_ = atoi(val);

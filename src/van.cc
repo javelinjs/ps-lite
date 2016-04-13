@@ -21,8 +21,8 @@ void Van::Start() {
   // zmq_ctx_set(context_, ZMQ_IO_THREADS, 4);
 
   // get scheduler info
-  scheduler_.hostname = std::string(CHECK_NOTNULL(getenv("DMLC_PS_ROOT_URI")));
-  scheduler_.port     = atoi(CHECK_NOTNULL(getenv("DMLC_PS_ROOT_PORT")));
+  scheduler_.hostname = std::string(CHECK_NOTNULL(Environment::Get()->find("DMLC_PS_ROOT_URI")));
+  scheduler_.port     = atoi(CHECK_NOTNULL(Environment::Get()->find("DMLC_PS_ROOT_PORT")));
   scheduler_.role     = Node::SCHEDULER;
   scheduler_.id       = kScheduler;
   is_scheduler_       = Postoffice::Get()->is_scheduler();
@@ -33,11 +33,11 @@ void Van::Start() {
   } else {
     auto role = is_scheduler_ ? Node::SCHEDULER :
                 (Postoffice::Get()->is_worker() ? Node::WORKER : Node::SERVER);
-    const char* nhost = getenv("DMLC_NODE_HOST");
+    const char* nhost = Environment::Get()->find("DMLC_NODE_HOST");
     std::string ip;
     if (nhost) ip = std::string(nhost);
     if (ip.empty()) {
-      const char*  itf = getenv("DMLC_INTERFACE");
+      const char*  itf = Environment::Get()->find("DMLC_INTERFACE");
       std::string interface;
       if (itf) interface = std::string(itf);
       if (interface.size()) {

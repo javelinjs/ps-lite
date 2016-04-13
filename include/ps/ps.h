@@ -11,6 +11,7 @@
 #include "ps/simple_app.h"
 /** \brief communcating with a list of key-value paris. */
 #include "ps/kv_app.h"
+#include "ps/env.h"
 namespace ps {
 /** \brief Returns the number of worker nodes */
 inline int NumWorkers() { return Postoffice::Get()->num_workers(); }
@@ -28,6 +29,9 @@ inline bool IsScheduler() { return Postoffice::Get()->is_scheduler(); }
  * servers. This function is available only after \ref Start has been called.
  */
 inline int MyRank() { return Postoffice::Get()->my_rank(); }
+inline void Init(std::unordered_map<std::string, std::string>& envs) {
+  Environment::Init(envs);
+}
 /**
  * \brief start the system
  *
