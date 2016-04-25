@@ -74,8 +74,12 @@ void Postoffice::Finalize() {
 void Postoffice::AddCustomer(Customer* customer) {
   std::lock_guard<std::mutex> lk(mu_);
   int id = CHECK_NOTNULL(customer)->id();
-  CHECK_EQ(customers_.count(id), (size_t)0) << "id " << id << " already exists";
-  customers_[id] = customer;
+  //CHECK_EQ(customers_.count(id), (size_t)0) << "id " << id << " already exists";
+  const auto it = customers_.find(id);
+  if (it == customers_.end()) {
+    customers_.insert(std::pair<int, std::vector<Customer*> >(id, std::vector<Customer*>()));
+  }
+  customers_[id].push_back(customer);
 }
 
 
@@ -86,20 +90,20 @@ void Postoffice::RemoveCustomer(Customer* customer) {
 }
 
 
-Customer* Postoffice::GetCustomer(int id, int timeout) const {
-  Customer* obj = nullptr;
+const std::vector<Customer*> Postoffice::GetCustomer(int id, int timeout) const {
+  std::vector<Customer*> customers;
   for (int i = 0; i < timeout*1000+1; ++i) {
     {
       std::lock_guard<std::mutex> lk(mu_);
       const auto it = customers_.find(id);
       if (it != customers_.end()) {
-        obj = it->second;
+        customers = it->second;
         break;
       }
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
-  return obj;
+  return customers;
 }
 
 void Postoffice::Barrier(int node_group) {

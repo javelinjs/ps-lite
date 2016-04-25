@@ -52,7 +52,7 @@ class Postoffice {
    * \param timeout timeout in sec
    * \return return nullptr if doesn't exist and timeout
    */
-  Customer* GetCustomer(int id, int timeout = 0) const;
+  const std::vector<Customer*> GetCustomer(int id, int timeout = 0) const;
   /**
    * \brief get the id of a node (group), threadsafe
    *
@@ -148,7 +148,7 @@ class Postoffice {
   ~Postoffice() { delete van_; }
   Van* van_;
   mutable std::mutex mu_;
-  std::unordered_map<int, Customer*> customers_;
+  std::unordered_map<int, std::vector<Customer*>> customers_;
   std::unordered_map<int, std::vector<int>> node_ids_;
   std::vector<Range> server_key_ranges_;
   bool is_worker_, is_server_, is_scheduler_;

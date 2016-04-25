@@ -245,9 +245,11 @@ void Van::Receiving() {
       CHECK_NE(msg.meta.recver, Meta::kEmpty);
       CHECK_NE(msg.meta.customer_id, Meta::kEmpty);
       int id = msg.meta.customer_id;
-      auto* obj = Postoffice::Get()->GetCustomer(id, 5);
-      CHECK(obj) << "timeout (5 sec) to wait App " << id << " ready";
-      obj->Accept(msg);
+      const auto customers = Postoffice::Get()->GetCustomer(id, 5);
+      CHECK(customers.size() > 0) << "timeout (5 sec) to wait App " << id << " ready";
+      //for (int i = 0; i < customers.size(); ++i) {
+        customers[0]->Accept(msg);
+      //}
     }
   }
 }
